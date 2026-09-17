@@ -1,0 +1,36 @@
+# ============================
+# Backend (Python / Django)
+# ============================
+apps/api/venv/
+apps/api/env/
+apps/api/__pycache__/
+apps/api/**/__pycache__/
+apps/api/*.pyc
+apps/api/db.sqlite3
+apps/api/staticfiles/
+apps/api/media/
+
+# ============================
+# Frontend (Next.js / Node)
+# ============================
+apps/web/node_modules/
+apps/web/.next/
+apps/web/out/
+apps/web/build/
+apps/web/next-env.d.ts
+
+# ============================
+# Variáveis de ambiente (nunca versionar)
+# ============================
+.env
+apps/api/.env
+apps/web/.env
+apps/web/.env.local
+
+# ============================
+# Editor / SO
+# ============================
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
