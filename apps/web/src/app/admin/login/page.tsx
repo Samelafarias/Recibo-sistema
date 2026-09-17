@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription,} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,16 +13,11 @@ import { Label } from "@/components/ui/label";
 export default function AdminLoginPage() {
 const router = useRouter();
 
-  const [mounted, setMounted] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -69,11 +64,6 @@ const router = useRouter();
       setLoading(false);
     }
   }
-
-  if (!mounted) {
-    return <div className="min-h-screen bg-[#0a0a0a]" />;
-  }
-
 
   return (
     <main className="min-h-screen bg-primary relative overflow-hidden font-sans">

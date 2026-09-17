@@ -1,15 +1,9 @@
 import type { Metadata } from "next";
-import { Poppins, Geist } from "next/font/google";
+import { Geist } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 
 const geist = Geist({subsets:['latin'],variable:'--font-sans'});
-
-const poppins = Poppins({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-poppins",
-});
 
 export const metadata: Metadata = {
   title: "RecibosFácil",
