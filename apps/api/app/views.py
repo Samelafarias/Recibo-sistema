@@ -1,6 +1,7 @@
 from rest_framework import viewsets, generics, permissions, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.auth.models import User
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.password_validation import validate_password
@@ -11,7 +12,7 @@ from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 
 from .models import Cliente, Recibo
-from .serializers import ClienteSerializer, ReciboSerializer, RegisterSerializer
+from .serializers import ClienteSerializer, ReciboSerializer, RegisterSerializer, EmailTokenObtainPairSerializer
 
 
 class ClienteViewSet(viewsets.ModelViewSet):
@@ -31,6 +32,10 @@ class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = RegisterSerializer
     permission_classes = [permissions.AllowAny]
+
+
+class EmailTokenObtainPairView(TokenObtainPairView):
+    serializer_class = EmailTokenObtainPairSerializer
 
 
 class PasswordResetRequestView(APIView):
