@@ -11,14 +11,13 @@ https://docs.djangoproject.com/en/6.1/ref/settings/
 """
 
 from pathlib import Path
-from decouple import Config, RepositoryEnv
+from decouple import AutoConfig
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Garantir que o .env seja lido corretamente dentro do container
-env_file = BASE_DIR / '.env'
-env = Config(RepositoryEnv(str(env_file))) if env_file.exists() else Config()
+# Lê variáveis de ambiente e também o .env local quando existir.
+env = AutoConfig(search_path=str(BASE_DIR))
 
 
 # Quick-start development settings - unsuitable for production
