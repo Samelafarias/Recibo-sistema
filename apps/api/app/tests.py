@@ -17,6 +17,19 @@ class ClienteAPITestCase(APITestCase):
         token = response.data['access']
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {token}')
 
+    def test_login_aceita_email_como_usuario(self):
+        user = User.objects.create_user(username='admin', email='admin@recibo.com', password='senha123')
+
+        response = self.client.post('/api/token/', {
+            'username': 'admin@recibo.com',
+            'password': 'senha123',
+        })
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn('access', response.data)
+        self.assertIn('refresh', response.data)
+        self.assertEqual(response.data['user']['email'], user.email)
+
     def test_lista_clientes_exige_autenticacao(self):
         response = self.client.get('/api/clientes/')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
