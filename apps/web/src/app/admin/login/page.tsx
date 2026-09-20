@@ -151,6 +151,12 @@ const router = useRouter();
                                {loading ? "Entrando..." : "Entrar"}
                             </Button>
                         </div>
+
+                         <div className="flex justify-center pt-1">Ainda não tem uma conta?
+                                <Link href="/admin/cadastro" className="text-sm text-[#1BA5C4] hover:text-secondary transition-colors ml-1">
+                                     Cadastre-se
+                                </Link>
+                            </div>
                     </form>
                 </CardContent>
             </Card>

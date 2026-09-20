@@ -22,7 +22,7 @@ services:
     build: ./apps/api
     restart: always
     env_file:
-    - ./apps/api/.env
+      - ./apps/api/.env
     environment:
       DB_HOST: db
       DB_PORT: 5432
@@ -36,20 +36,6 @@ services:
         condition: service_healthy
     volumes:
       - ./apps/api:/app
-
-  web:
-    build: ./apps/web
-    restart: always
-    env_file:
-      - .env
-    ports:
-      - "3000:3000"
-    depends_on:
-      - api
-    volumes:
-      - ./apps/web:/app
-      - /app/node_modules
-      - /app/.next
 
 volumes:
   postgres_data:
