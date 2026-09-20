@@ -29,7 +29,7 @@ SECRET_KEY = env('SECRET_KEY', default='django-insecure-troque-isto-em-producao'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG', default=True, cast=bool)
 
-FRONTEND_URL = env('FRONTEND_URL', default='http://localhost:3000/redefinir-senha')
+FRONTEND_URL = env('FRONTEND_URL', default='http://localhost:3000/admin/redefinir-senha')
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'api', 'web', '*']
 
