@@ -109,3 +109,16 @@ class PasswordResetConfirmView(APIView):
         user.set_password(new_password)
         user.save()
         return Response({'detail': 'Senha redefinida com sucesso.'})
+
+
+class MeView(APIView):
+    """Devolve os dados do usuário autenticado (usado pela sidebar, por exemplo)."""
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        return Response({
+            'id': user.id,
+            'nome': user.first_name,
+            'email': user.email,
+        })

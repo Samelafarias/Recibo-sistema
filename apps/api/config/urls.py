@@ -17,7 +17,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework_simplejwt.views import TokenRefreshView
-from app.views import RegisterView, PasswordResetRequestView, PasswordResetConfirmView, EmailTokenObtainPairView
+from app.views import (
+    RegisterView,
+    PasswordResetRequestView,
+    PasswordResetConfirmView,
+    EmailTokenObtainPairView,
+    MeView,
+)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,5 +33,5 @@ urlpatterns = [
     path('api/register/', RegisterView.as_view(), name='register'),
     path('api/password-reset/', PasswordResetRequestView.as_view(), name='password_reset'),
     path('api/password-reset-confirm/', PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
-
+    path('me/', MeView.as_view(), name='me'),
     ]
