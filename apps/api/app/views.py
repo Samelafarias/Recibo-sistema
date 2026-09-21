@@ -8,6 +8,8 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError as DjangoValidationError
 from django.core.mail import send_mail
 from django.conf import settings
+from django.db.models import Sum
+from django.utils import timezone
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 
@@ -121,4 +123,48 @@ class MeView(APIView):
             'id': user.id,
             'nome': user.first_name,
             'email': user.email,
+        })
+
+
+class DashboardView(APIView):
+    """Resumo do dashboard para a área administrativa."""
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        hoje = timezone.now()
+        mes_atual = hoje.month
+        ano_atual = hoje.year
+
+        recibos_do_mes = Recibo.objects.filter(
+            competencia_mes=mes_atual,
+            competencia_ano=ano_atual,
+            status='gerado',
+        )
+
+        receita_mes = recibos_do_mes.aggregate(total=Sum('valor'))['total'] or 0
+
+        clientes_ids_com_recibo = recibos_do_mes.values_list('cliente_id', flat=True)
+        recibos_nao_gerados = Cliente.objects.filter(ativo=True).exclude(
+            id__in=clientes_ids_com_recibo
+        ).count()
+
+        clientes_cadastrados = Cliente.objects.count()
+
+        recentes = Recibo.objects.select_related('cliente').order_by('-criado_em')[:4]
+        recibos_recentes = [
+            {
+                'id': r.id,
+                'cliente_nome': r.cliente.nome,
+                'status': r.status,
+                'data_emissao': r.data_emissao.isoformat(),
+                'valor': str(r.valor),
+            }
+            for r in recentes
+        ]
+
+        return Response({
+            'receita_mes': str(receita_mes),
+            'recibos_nao_gerados': recibos_nao_gerados,
+            'clientes_cadastrados': clientes_cadastrados,
+            'recibos_recentes': recibos_recentes,
         })

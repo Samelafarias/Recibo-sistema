@@ -1,8 +1,8 @@
 from django.contrib.auth.models import User
-from django.urls import reverse
+from django.utils import timezone
 from rest_framework.test import APITestCase
 from rest_framework import status
-from .models import Cliente
+from .models import Cliente, Recibo
 
 
 class ClienteAPITestCase(APITestCase):
@@ -70,3 +70,35 @@ class ClienteAPITestCase(APITestCase):
 
         segunda = self.client.post('/api/recibos/', payload)
         self.assertEqual(segunda.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_dashboard_retorna_resumo_do_mes(self):
+        self.autenticar()
+
+        hoje = timezone.now()
+        cliente_ativo = Cliente.objects.create(
+            nome='Cliente Ativo',
+            valor_mensal='300.00',
+            referente_padrao='Mensalidade',
+        )
+        cliente_inativo = Cliente.objects.create(
+            nome='Cliente Inativo',
+            valor_mensal='150.00',
+            referente_padrao='Mensalidade',
+            ativo=False,
+        )
+
+        Recibo.objects.create(
+            cliente=cliente_ativo,
+            competencia_mes=hoje.month,
+            competencia_ano=hoje.year,
+            valor='300.00',
+            referente='Mensalidade',
+            status='gerado',
+        )
+
+        response = self.client.get('/api/dashboard/')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['clientes_cadastrados'], 2)
+        self.assertEqual(response.data['recibos_nao_gerados'], 0)
+        self.assertEqual(response.data['receita_mes'], '300.00')
