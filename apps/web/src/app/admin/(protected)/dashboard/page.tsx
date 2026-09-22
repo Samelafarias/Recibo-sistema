@@ -144,7 +144,7 @@ export default function AdminDashboardPage() {
         </div>
 
         <Button
-          onClick={() => router.push("/recibos")}
+          onClick={() => router.push("/admin/recibos")}
           className="flex items-center justify-center m-auto mt-6 bg-primary hover:bg-[#5a7f94] text-white font-semibold py-6 px-16 rounded-lg"
         >
           Ver mais
