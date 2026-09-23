@@ -18,12 +18,12 @@ function ReciboParaImpressao({ item }: { item: LinhaRecibo }) {
 
   return (
     <div
-      className="border border-gray-300 rounded-xl p-4 text-xs text-gray-700"
+      className="border rounded-xl p-4 text-xs text-gray-700 bg-white"
       style={{ height: "6.5cm" }}
     >
       <div className="grid grid-cols-12 gap-4 h-full">
         {/* Canhoto */}
-        <div className="col-span-4 border-r border-dashed border-gray-400 pr-4 flex flex-col justify-between">
+        <div className="col-span-4 border-r border-gray-200 pr-4 flex flex-col justify-between bg-white">
           <div className="text-center font-bold text-gray-800 text-sm tracking-wider">
             REO
           </div>
@@ -44,8 +44,8 @@ function ReciboParaImpressao({ item }: { item: LinhaRecibo }) {
             <Image
               src="/sf-logo.png"
               alt="ReciboFácil Logo"
-              width={120}
-              height={48}
+              width={320}
+              height={40}
               className="h-18 w-auto"
             />
             <div className="border border-gray-400 bg-white font-bold text-sm px-3 py-1.5 rounded-md text-gray-900">
@@ -75,7 +75,7 @@ export default function AreaImpressao({ itens }: { itens: LinhaRecibo[] | null }
   return (
     <div id="area-impressao">
       {agruparEmPaginas(itens).map((pagina, i) => (
-        <div key={i} className="pagina-impressao flex flex-col gap-4 p-6">
+        <div key={i} className="pagina-impressao flex flex-col gap-4 p-6 bg-white">
           {pagina.map((item) => (
             <ReciboParaImpressao key={item.cliente_id} item={item} />
           ))}

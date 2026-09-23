@@ -49,7 +49,7 @@ export function ImprimirReciboModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[760px] bg-[#F8FAFC] border-none rounded-2xl p-6 shadow-xl text-gray-800">
+      <DialogContent className="sm:max-w-190 bg-white border-none rounded-2xl p-6 shadow-xl text-gray-800">
         <DialogHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <div>
             <DialogTitle className="text-xl font-bold text-primary">
@@ -84,7 +84,7 @@ export function ImprimirReciboModal({
             {/* Recibo Principal */}
             <div className="col-span-8 flex flex-col justify-between space-y-3 pl-2">
               <div className="flex items-center justify-between gap-2">
-                <Image src="/sf-logo.png" alt="ReciboFácil Logo" width={320} height={40} className="w-auto h-auto" />
+                <Image src="/sf-logo.png" alt="Logo do Escritório" width={320} height={40} className="w-auto h-auto" />
 
                 <div className="border border-gray-400 bg-white font-bold text-sm px-3 py-1.5 rounded-md text-gray-900 shadow-sm">
                   {reciboAtual.valor}

@@ -81,12 +81,24 @@ export function useRecibos() {
 
   // Dispara a impressão real assim que itensParaImprimir é preenchido
   useEffect(() => {
-    if (!itensParaImprimir) return;
+  if (!itensParaImprimir) return;
+
+  function dispararImpressao() {
     window.print();
     const limpar = () => setItensParaImprimir(null);
     window.addEventListener("afterprint", limpar, { once: true });
-    return () => window.removeEventListener("afterprint", limpar);
-  }, [itensParaImprimir]);
+  }
+
+  const logo = new Image();
+  logo.src = "/sf-logo.png";
+
+  if (logo.complete) {
+    dispararImpressao();
+  } else {
+    logo.onload = dispararImpressao;
+    logo.onerror = dispararImpressao; // não trava a impressão pra sempre se a logo falhar de vez
+  }
+}, [itensParaImprimir]);
 
   function mudarMes(novoMes: number, novoAno: number) {
     setMes(novoMes);
