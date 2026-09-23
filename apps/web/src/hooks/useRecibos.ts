@@ -166,6 +166,46 @@ export function useRecibos() {
     }
   }
 
+  async function salvarEdicao(data: {
+  id?: string | number;
+  valor: string;
+  referente?: string;
+  observacao?: string;
+}) {
+  const linha = itemParaEditar;
+  if (!linha) return;
+
+  setSalvandoEdicao(true);
+  try {
+    const response = linha.recibo_id
+      ? await fetch(`${apiUrl()}/api/recibos/${linha.recibo_id}/`, {
+          method: "PATCH",
+          headers: authHeaders(),
+          body: JSON.stringify({
+            valor: parseValorBR(data.valor),
+            referente: data.referente,
+            observacao: data.observacao,
+          }),
+        })
+      : await fetch(`${apiUrl()}/api/clientes/${linha.cliente_id}/`, {
+          method: "PATCH",
+          headers: authHeaders(),
+          body: JSON.stringify({
+            valor_mensal: parseValorBR(data.valor),
+            referente_padrao: data.referente,
+          }),
+        });
+
+    if (!response.ok) throw new Error("Não foi possível salvar as alterações.");
+    setIsEditarOpen(false);
+    await carregarRecibos();
+  } catch (err) {
+    setError(err instanceof Error ? err.message : "Erro ao salvar.");
+  } finally {
+    setSalvandoEdicao(false);
+  }
+}
+
   function abrirModalImprimir(itens: LinhaRecibo[]) {
     const validos = itens.filter((i) => i.recibo_id);
     if (validos.length === 0) return;
