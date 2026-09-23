@@ -137,35 +137,6 @@ export function useRecibos() {
     setItemParaEditar(linha);
     setIsEditarOpen(true);
   }
-
-  async function salvarEdicao(data: {
-    id?: string | number;
-    valor: string;
-    referente?: string;
-    observacao?: string;
-  }) {
-    if (!data.id) return;
-    setSalvandoEdicao(true);
-    try {
-      const response = await fetch(`${apiUrl()}/api/recibos/${data.id}/`, {
-        method: "PATCH",
-        headers: authHeaders(),
-        body: JSON.stringify({
-          valor: parseValorBR(data.valor),
-          referente: data.referente,
-          observacao: data.observacao,
-        }),
-      });
-      if (!response.ok) throw new Error("Não foi possível salvar as alterações.");
-      setIsEditarOpen(false);
-      await carregarRecibos();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Erro ao salvar.");
-    } finally {
-      setSalvandoEdicao(false);
-    }
-  }
-
   async function salvarEdicao(data: {
   id?: string | number;
   valor: string;
