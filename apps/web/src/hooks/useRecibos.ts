@@ -81,12 +81,24 @@ export function useRecibos() {
 
   // Dispara a impressão real assim que itensParaImprimir é preenchido
   useEffect(() => {
-    if (!itensParaImprimir) return;
+  if (!itensParaImprimir) return;
+
+  function dispararImpressao() {
     window.print();
     const limpar = () => setItensParaImprimir(null);
     window.addEventListener("afterprint", limpar, { once: true });
-    return () => window.removeEventListener("afterprint", limpar);
-  }, [itensParaImprimir]);
+  }
+
+  const logo = new Image();
+  logo.src = "/sf-logo.png";
+
+  if (logo.complete) {
+    dispararImpressao();
+  } else {
+    logo.onload = dispararImpressao;
+    logo.onerror = dispararImpressao; // não trava a impressão pra sempre se a logo falhar de vez
+  }
+}, [itensParaImprimir]);
 
   function mudarMes(novoMes: number, novoAno: number) {
     setMes(novoMes);
@@ -137,34 +149,45 @@ export function useRecibos() {
     setItemParaEditar(linha);
     setIsEditarOpen(true);
   }
-
   async function salvarEdicao(data: {
-    id?: string | number;
-    valor: string;
-    referente?: string;
-    observacao?: string;
-  }) {
-    if (!data.id) return;
-    setSalvandoEdicao(true);
-    try {
-      const response = await fetch(`${apiUrl()}/api/recibos/${data.id}/`, {
-        method: "PATCH",
-        headers: authHeaders(),
-        body: JSON.stringify({
-          valor: parseValorBR(data.valor),
-          referente: data.referente,
-          observacao: data.observacao,
-        }),
-      });
-      if (!response.ok) throw new Error("Não foi possível salvar as alterações.");
-      setIsEditarOpen(false);
-      await carregarRecibos();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Erro ao salvar.");
-    } finally {
-      setSalvandoEdicao(false);
-    }
+  id?: string | number;
+  valor: string;
+  referente?: string;
+  observacao?: string;
+}) {
+  const linha = itemParaEditar;
+  if (!linha) return;
+
+  setSalvandoEdicao(true);
+  try {
+    const response = linha.recibo_id
+      ? await fetch(`${apiUrl()}/api/recibos/${linha.recibo_id}/`, {
+          method: "PATCH",
+          headers: authHeaders(),
+          body: JSON.stringify({
+            valor: parseValorBR(data.valor),
+            referente: data.referente,
+            observacao: data.observacao,
+          }),
+        })
+      : await fetch(`${apiUrl()}/api/clientes/${linha.cliente_id}/`, {
+          method: "PATCH",
+          headers: authHeaders(),
+          body: JSON.stringify({
+            valor_mensal: parseValorBR(data.valor),
+            referente_padrao: data.referente,
+          }),
+        });
+
+    if (!response.ok) throw new Error("Não foi possível salvar as alterações.");
+    setIsEditarOpen(false);
+    await carregarRecibos();
+  } catch (err) {
+    setError(err instanceof Error ? err.message : "Erro ao salvar.");
+  } finally {
+    setSalvandoEdicao(false);
   }
+}
 
   function abrirModalImprimir(itens: LinhaRecibo[]) {
     const validos = itens.filter((i) => i.recibo_id);

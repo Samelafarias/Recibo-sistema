@@ -86,18 +86,12 @@ export default function TabelaRecibos({
                       <Printer className="w-5 h-5" />
                     </button>
                     <button
-                      type="button"
-                      disabled={!linha.recibo_id || linha.status === "gerado"}
-                      onClick={() => onEditar(linha)}
-                      className={
-                        !linha.recibo_id || linha.status === "gerado"
-                          ? "text-gray-300 cursor-not-allowed"
-                          : "text-gray-500 hover:text-gray-800"
-                      }
-                      aria-label={`Editar recibo de ${linha.nome}`}
-                    >
-                      <Pencil className="w-5 h-5" />
-                    </button>
+                        disabled={linha.status === "gerado"}
+                        onClick={() => onEditar(linha)}
+                        className={linha.status === "gerado" ? "text-gray-300 cursor-not-allowed" : "text-gray-500 hover:text-gray-800"}
+                      >
+                        <Pencil className="w-5 h-5" />
+                      </button>
                   </div>
                 </td>
               </tr>

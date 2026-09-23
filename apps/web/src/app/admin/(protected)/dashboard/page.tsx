@@ -87,7 +87,7 @@ export default function AdminDashboardPage() {
         <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <Card className="p-4">
             <div className="flex items-center justify-between mb-2">
-              <h2 className="text-sm text-gray-400">Receita dos recibos gerados</h2>
+              <h2 className="text-sm text-gray-400">Receita dos recibos gerados mensal</h2>
               <DollarSign className="w-6 h-6 text-emerald-500" />
             </div>
             <p className="text-4xl text-text font-extrabold">
