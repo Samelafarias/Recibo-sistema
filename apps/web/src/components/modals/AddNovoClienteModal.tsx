@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -31,12 +31,14 @@ export function AddNovoClienteModal({ isOpen, onClose, onSave, isLoading = false
     onClose();
   }
 
-  useEffect(() => {
-    if (isOpen) {
-      setFormData(FORM_VAZIO);
-      enviandoRef.current = false;
+  function handleOpenChange(open: boolean) {
+    setFormData(FORM_VAZIO);
+    enviandoRef.current = false;
+
+    if (!open) {
+      onClose();
     }
-  }, [isOpen]);
+  }
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
@@ -56,13 +58,7 @@ export function AddNovoClienteModal({ isOpen, onClose, onSave, isLoading = false
     <Dialog
       key={isOpen ? "add-cliente-open" : "add-cliente-closed"}
       open={isOpen}
-      onOpenChange={(open) => {
-        if (!open) {
-          setFormData(FORM_VAZIO);
-          enviandoRef.current = false;
-          onClose();
-        }
-      }}
+      onOpenChange={handleOpenChange}
     >
       <DialogContent className="sm:max-w-[480px] bg-white border-none rounded-2xl p-6 shadow-xl text-gray-800">
         <DialogHeader className="pb-2">
