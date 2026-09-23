@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -40,15 +40,7 @@ export function EditarReciboModal({
   recibo,
   isLoading = false,
 }: EditarReciboModalProps) {
-  const [formData, setFormData] = useState<ReciboData>(FORM_VAZIO);
-
-  // Recarrega os dados reais toda vez que a modal abre (não só quando "recibo" muda de referência),
-  // pra evitar que uma edição cancelada fique "presa" no formulário na próxima abertura.
-  useEffect(() => {
-    if (isOpen && recibo) {
-      setFormData(recibo);
-    }
-  }, [isOpen, recibo]);
+  const [formData, setFormData] = useState<ReciboData>(() => recibo ?? FORM_VAZIO);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>

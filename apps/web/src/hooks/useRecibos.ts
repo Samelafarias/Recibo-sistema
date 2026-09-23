@@ -72,7 +72,11 @@ export function useRecibos() {
   }, [mes, ano, statusFiltro, busca, pagina, router]);
 
   useEffect(() => {
-    carregarRecibos();
+    const timer = window.setTimeout(() => {
+      void carregarRecibos();
+    }, 0);
+
+    return () => window.clearTimeout(timer);
   }, [carregarRecibos]);
 
   // Dispara a impressão real assim que itensParaImprimir é preenchido

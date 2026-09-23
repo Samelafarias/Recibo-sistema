@@ -76,6 +76,7 @@ export default function AdminRecibosPage() {
         </div>
 
         <ImprimirReciboModal
+          key={`${r.isImprimirOpen}-${r.previaImpressao.map((item) => item.recibo_id).join("-")}`}
           isOpen={r.isImprimirOpen}
           onClose={() => r.setIsImprimirOpen(false)}
           onConfirm={r.confirmarImpressao}
@@ -92,6 +93,7 @@ export default function AdminRecibosPage() {
         />
 
         <EditarReciboModal
+          key={`${r.isEditarOpen}-${r.itemParaEditar?.recibo_id ?? "novo"}`}
           isOpen={r.isEditarOpen}
           onClose={() => r.setIsEditarOpen(false)}
           isLoading={r.salvandoEdicao}

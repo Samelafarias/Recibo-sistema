@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -33,11 +33,6 @@ export function ImprimirReciboModal({
   isLoading = false,
 }: ImprimirReciboModalProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
-
-  // Sempre volta pro primeiro recibo quando a modal abre com uma nova seleção
-  useEffect(() => {
-    if (isOpen) setCurrentIndex(0);
-  }, [isOpen]);
 
   if (recibos.length === 0) return null;
 
