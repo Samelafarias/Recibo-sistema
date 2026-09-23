@@ -18,6 +18,8 @@ from .serializers import ClienteSerializer, ReciboSerializer, RegisterSerializer
 from django.db.models import Q
 from rest_framework.decorators import action
 from rest_framework import status as http_status
+from rest_framework.pagination import PageNumberPagination
+from django.db.models import ProtectedError
 
 
 class ClienteViewSet(viewsets.ModelViewSet):
@@ -279,3 +281,34 @@ class GerarRecibosView(APIView):
                 gerados.append(recibo.id)
 
         return Response({'gerados': len(gerados)})
+
+class ClientePagination(PageNumberPagination):
+    page_size = 8
+
+
+class ClienteViewSet(viewsets.ModelViewSet):
+    serializer_class = ClienteSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    pagination_class = ClientePagination
+
+    def get_queryset(self):
+        # Só mostra clientes ativos — os "excluídos" que viram inativos (ver destroy() abaixo) somem da lista
+        qs = Cliente.objects.filter(ativo=True).order_by('nome')
+        busca = self.request.query_params.get('busca')
+        if busca:
+            qs = qs.filter(nome__icontains=busca)
+        return qs
+
+    def destroy(self, request, *args, **kwargs):
+        cliente = self.get_object()
+        try:
+            cliente.delete()
+            return Response(status=http_status.HTTP_204_NO_CONTENT)
+        except ProtectedError:
+            # Cliente já tem recibo emitido — não apaga de verdade, só inativa
+            cliente.ativo = False
+            cliente.save(update_fields=['ativo'])
+            return Response(
+                {'detail': 'Este cliente possui recibos emitidos e foi arquivado em vez de excluído.'},
+                status=http_status.HTTP_200_OK,
+            )

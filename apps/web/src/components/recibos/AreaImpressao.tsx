@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { LinhaRecibo, formatarMoeda, valorPorExtenso, dataPorExtenso } from "@/lib/recibo-utils";
 
 const RECIBOS_POR_PAGINA = 4; // trocar pra 3 se quiser mais espaço entre eles
@@ -40,9 +41,11 @@ function ReciboParaImpressao({ item }: { item: LinhaRecibo }) {
         {/* Recibo principal */}
         <div className="col-span-8 flex flex-col justify-between">
           <div className="flex items-center justify-between gap-2">
-            <img
+            <Image
               src="/sf-logo.png"
               alt="ReciboFácil Logo"
+              width={120}
+              height={48}
               className="h-18 w-auto"
             />
             <div className="border border-gray-400 bg-white font-bold text-sm px-3 py-1.5 rounded-md text-gray-900">
