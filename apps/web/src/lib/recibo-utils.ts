@@ -112,3 +112,12 @@ export function authHeaders() {
   const token = localStorage.getItem("access_token");
   return { Authorization: `Bearer ${token}`, "Content-Type": "application/json" };
 }
+
+export type Cliente = {
+  id: number;
+  nome: string;
+  valor_mensal: string;
+  dia_vencimento: number | null;
+  referente_padrao: string;
+  ativo: boolean;
+};

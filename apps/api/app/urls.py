@@ -3,8 +3,8 @@ from rest_framework.routers import DefaultRouter
 from .views import ClienteViewSet, ReciboViewSet, MeView, DashboardView, RecibosPorCompetenciaView, GerarRecibosView
 
 router = DefaultRouter()
-router.register(r'clientes', ClienteViewSet)
-router.register(r'recibos', ReciboViewSet)
+router.register(r'clientes', ClienteViewSet, basename='cliente')
+router.register(r'recibos', ReciboViewSet, basename='recibo')
 
 urlpatterns = [
     path('me/', MeView.as_view(), name='me'),
