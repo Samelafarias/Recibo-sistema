@@ -38,7 +38,7 @@ export function EditarClienteModal({ isOpen, onClose, onSave, cliente, isLoading
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent key={cliente?.id ?? "cliente-novo"} className="sm:max-w-[480px] bg-white border-none rounded-2xl p-6 shadow-xl text-gray-800">
+      <DialogContent key={cliente?.id ?? "cliente-novo"} className="sm:max-w-120 bg-white border-none rounded-2xl p-6 shadow-xl text-gray-800">
         <DialogHeader className="pb-2">
           <DialogTitle className="text-xl font-bold text-primary">Editar Cliente</DialogTitle>
         </DialogHeader>
