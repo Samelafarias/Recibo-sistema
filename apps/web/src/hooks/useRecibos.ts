@@ -99,7 +99,8 @@ export function useRecibos() {
     setPagina(1);
   }
 
-  function mudarStatus(valor: string) {
+  function mudarStatus(valor: string | null) {
+    if (valor === null || valor === undefined) return;
     setStatusFiltro(valor);
     setPagina(1);
   }

@@ -13,7 +13,7 @@ type Props = {
   gerando: boolean;
   onMudarMes: (mes: number, ano: number) => void;
   onMudarBusca: (valor: string) => void;
-  onMudarStatus: (valor: string) => void;
+  onMudarStatus: (valor: string | null) => void;
   onGerar: () => void;
 };
 
@@ -28,9 +28,12 @@ export default function FiltrosRecibos({
       <div className="flex items-center justify-between mb-6">
         <Select
           value={`${mes}-${ano}`}
-          onValueChange={(v) => {
-            const [m, a] = v.split("-").map(Number);
-            onMudarMes(m, a);
+          onValueChange={(valor) => {
+            if (!valor) return;
+            const [m, a] = valor.split("-").map(Number);
+            if (Number.isFinite(m) && Number.isFinite(a)) {
+              onMudarMes(m, a);
+            }
           }}
         >
           <SelectTrigger className="w-52.5 bg-white border-gray-200 text-gray-800 font-medium h-11 py-6 px-4 rounded-xl shadow-sm">
@@ -62,7 +65,14 @@ export default function FiltrosRecibos({
           />
           <Search className="w-6 h-6 text-gray-400 absolute right-4 top-1/2 -translate-y-1/2" />
         </div>
-        <Select value={statusFiltro} onValueChange={onMudarStatus}>
+        <Select
+          value={statusFiltro}
+          onValueChange={(valor) => {
+            if (valor !== null && valor !== undefined) {
+              onMudarStatus(valor);
+            }
+          }}
+        >
           <SelectTrigger className="w-52.5 bg-white border-gray-200 text-gray-800 font-medium h-11 py-6 px-4 rounded-xl shadow-sm">
             <SelectValue placeholder="Filtrar por status" />
           </SelectTrigger>
