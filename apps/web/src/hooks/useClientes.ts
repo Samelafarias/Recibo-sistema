@@ -59,8 +59,9 @@ export function useClientes() {
     }
   }, [busca, pagina, router]);
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => {
-    carregarClientes();
+    void carregarClientes();
   }, [carregarClientes]);
 
   function mudarBusca(valor: string) {

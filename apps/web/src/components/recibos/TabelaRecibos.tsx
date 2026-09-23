@@ -73,6 +73,20 @@ export default function TabelaRecibos({
                 <td className="p-4 text-center">
                   <div className="flex justify-center items-center gap-3">
                     <button
+                      type="button"
+                      onClick={() => onImprimir(linha)}
+                      disabled={!linha.recibo_id || linha.status !== "gerado"}
+                      className={
+                        !linha.recibo_id || linha.status !== "gerado"
+                          ? "text-gray-300 cursor-not-allowed"
+                          : "text-gray-500 hover:text-gray-800"
+                      }
+                      aria-label={`Imprimir recibo de ${linha.nome}`}
+                    >
+                      <Printer className="w-5 h-5" />
+                    </button>
+                    <button
+                      type="button"
                       disabled={!linha.recibo_id || linha.status === "gerado"}
                       onClick={() => onEditar(linha)}
                       className={
@@ -80,6 +94,7 @@ export default function TabelaRecibos({
                           ? "text-gray-300 cursor-not-allowed"
                           : "text-gray-500 hover:text-gray-800"
                       }
+                      aria-label={`Editar recibo de ${linha.nome}`}
                     >
                       <Pencil className="w-5 h-5" />
                     </button>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -24,11 +24,7 @@ interface EditarClienteModalProps {
 const FORM_VAZIO: ClienteFormData = { nome: "", valor: "", referente: "", diaVencimento: "" };
 
 export function EditarClienteModal({ isOpen, onClose, onSave, cliente, isLoading = false }: EditarClienteModalProps) {
-  const [formData, setFormData] = useState<ClienteFormData>(FORM_VAZIO);
-
-  useEffect(() => {
-    if (isOpen && cliente) setFormData(cliente);
-  }, [isOpen, cliente]);
+  const [formData, setFormData] = useState<ClienteFormData>(() => (cliente ? { ...cliente } : FORM_VAZIO));
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
@@ -42,7 +38,7 @@ export function EditarClienteModal({ isOpen, onClose, onSave, cliente, isLoading
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[480px] bg-white border-none rounded-2xl p-6 shadow-xl text-gray-800">
+      <DialogContent key={cliente?.id ?? "cliente-novo"} className="sm:max-w-[480px] bg-white border-none rounded-2xl p-6 shadow-xl text-gray-800">
         <DialogHeader className="pb-2">
           <DialogTitle className="text-xl font-bold text-primary">Editar Cliente</DialogTitle>
         </DialogHeader>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -24,11 +24,6 @@ const FORM_VAZIO: NovoClienteData = { nome: "", valor: "", referente: "", diaVen
 export function AddNovoClienteModal({ isOpen, onClose, onSave, isLoading = false }: AddNovoClienteModalProps) {
   const [formData, setFormData] = useState<NovoClienteData>(FORM_VAZIO);
 
-  // Toda vez que a modal abre, começa vazia — não existe "cliente pra pré-preencher" aqui
-  useEffect(() => {
-    if (isOpen) setFormData(FORM_VAZIO);
-  }, [isOpen]);
-
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -41,7 +36,7 @@ export function AddNovoClienteModal({ isOpen, onClose, onSave, isLoading = false
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[480px] bg-white border-none rounded-2xl p-6 shadow-xl text-gray-800">
+      <DialogContent key={isOpen ? "add-cliente-open" : "add-cliente-closed"} className="sm:max-w-[480px] bg-white border-none rounded-2xl p-6 shadow-xl text-gray-800">
         <DialogHeader className="pb-2">
           <DialogTitle className="text-xl font-bold text-primary">Adicionar Novo Cliente</DialogTitle>
         </DialogHeader>
