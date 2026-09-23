@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,6 +23,20 @@ const FORM_VAZIO: NovoClienteData = { nome: "", valor: "", referente: "", diaVen
 
 export function AddNovoClienteModal({ isOpen, onClose, onSave, isLoading = false }: AddNovoClienteModalProps) {
   const [formData, setFormData] = useState<NovoClienteData>(FORM_VAZIO);
+  const enviandoRef = useRef(false);
+
+  function resetarModal() {
+    setFormData(FORM_VAZIO);
+    enviandoRef.current = false;
+    onClose();
+  }
+
+  useEffect(() => {
+    if (isOpen) {
+      setFormData(FORM_VAZIO);
+      enviandoRef.current = false;
+    }
+  }, [isOpen]);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
@@ -31,12 +45,26 @@ export function AddNovoClienteModal({ isOpen, onClose, onSave, isLoading = false
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+
+    if (enviandoRef.current || isLoading) return;
+
+    enviandoRef.current = true;
     onSave(formData);
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent key={isOpen ? "add-cliente-open" : "add-cliente-closed"} className="sm:max-w-[480px] bg-white border-none rounded-2xl p-6 shadow-xl text-gray-800">
+    <Dialog
+      key={isOpen ? "add-cliente-open" : "add-cliente-closed"}
+      open={isOpen}
+      onOpenChange={(open) => {
+        if (!open) {
+          setFormData(FORM_VAZIO);
+          enviandoRef.current = false;
+          onClose();
+        }
+      }}
+    >
+      <DialogContent className="sm:max-w-[480px] bg-white border-none rounded-2xl p-6 shadow-xl text-gray-800">
         <DialogHeader className="pb-2">
           <DialogTitle className="text-xl font-bold text-primary">Adicionar Novo Cliente</DialogTitle>
         </DialogHeader>
@@ -80,7 +108,7 @@ export function AddNovoClienteModal({ isOpen, onClose, onSave, isLoading = false
           </div>
 
           <div className="flex items-center justify-end gap-3 pt-4">
-            <Button type="button" variant="outline" onClick={onClose} className="bg-white border-gray-300 text-gray-700 font-semibold px-6 py-2 h-10 rounded-xl shadow-sm hover:bg-gray-100">
+            <Button type="button" variant="outline" onClick={resetarModal} className="bg-white border-gray-300 text-gray-700 font-semibold px-6 py-2 h-10 rounded-xl shadow-sm hover:bg-gray-100">
               Cancelar
             </Button>
             <Button type="submit" disabled={isLoading} className="bg-primary hover:bg-[#0A2534] text-white font-medium px-6 py-2 h-10 rounded-xl shadow-sm">
