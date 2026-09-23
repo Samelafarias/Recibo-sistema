@@ -7,6 +7,8 @@ from .models import Cliente, Recibo
 
 
 class ClienteSerializer(serializers.ModelSerializer):
+    ativo = serializers.BooleanField(required=False, default=True)
+
     class Meta:
         model = Cliente
         fields = '__all__'
