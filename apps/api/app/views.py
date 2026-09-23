@@ -15,6 +15,9 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 
 from .models import Cliente, Recibo
 from .serializers import ClienteSerializer, ReciboSerializer, RegisterSerializer, EmailTokenObtainPairSerializer
+from django.db.models import Q
+from rest_framework.decorators import action
+from rest_framework import status as http_status
 
 
 class ClienteViewSet(viewsets.ModelViewSet):
@@ -168,3 +171,111 @@ class DashboardView(APIView):
             'clientes_cadastrados': clientes_cadastrados,
             'recibos_recentes': recibos_recentes,
         })
+
+class RecibosPorCompetenciaView(APIView):
+    """Lista clientes ativos cruzados com o recibo daquele mês (se existir)."""
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        try:
+            mes = int(request.query_params.get('mes'))
+            ano = int(request.query_params.get('ano'))
+        except (TypeError, ValueError):
+            return Response({'detail': 'Informe mes e ano.'}, status=http_status.HTTP_400_BAD_REQUEST)
+
+        status_filtro = (request.query_params.get('status', 'todos') or 'todos').strip().lower()
+        status_filtro = status_filtro.replace(' ', '-').replace('ã', 'a').replace('á', 'a').replace('à', 'a')
+        busca = request.query_params.get('busca', '')
+        page = int(request.query_params.get('page', 1))
+        page_size = 8
+
+        clientes = Cliente.objects.filter(ativo=True)
+        if busca:
+            clientes = clientes.filter(nome__icontains=busca)
+
+        recibos_do_mes = {
+            r.cliente_id: r
+            for r in Recibo.objects.filter(competencia_mes=mes, competencia_ano=ano)
+        }
+
+        linhas = []
+        for cliente in clientes.order_by('nome'):
+            recibo = recibos_do_mes.get(cliente.id)
+            if recibo:
+                linhas.append({
+                    'recibo_id': recibo.id,
+                    'cliente_id': cliente.id,
+                    'nome': cliente.nome,
+                    'valor': str(recibo.valor),
+                    'referente': recibo.referente,
+                    'observacao': recibo.observacao,
+                    'data_emissao': recibo.data_emissao,
+                    'status': (recibo.status or '').lower(),
+                    'impresso': recibo.impresso,
+                })
+            else:
+                linhas.append({
+                    'recibo_id': None,
+                    'cliente_id': cliente.id,
+                    'nome': cliente.nome,
+                    'valor': str(cliente.valor_mensal),
+                    'referente': cliente.referente_padrao,
+                    'observacao': None,
+                    'data_emissao': None,
+                    'status': 'pendente',
+                    'impresso': False,
+                })
+
+        if status_filtro == 'gerado':
+            linhas = [l for l in linhas if l['status'] == 'gerado']
+        elif status_filtro in {'nao-gerado', 'nao-gerado'}:
+            linhas = [l for l in linhas if l['status'] == 'pendente']
+
+        total = len(linhas)
+        total_paginas = max(1, (total + page_size - 1) // page_size)
+        inicio = (page - 1) * page_size
+        pagina = linhas[inicio:inicio + page_size]
+
+        return Response({
+            'results': pagina,
+            'pagina_atual': page,
+            'total_paginas': total_paginas,
+        })
+
+
+class GerarRecibosView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        mes = request.data.get('mes')
+        ano = request.data.get('ano')
+        cliente_ids = request.data.get('cliente_ids')  # lista opcional
+
+        if not mes or not ano:
+            return Response({'detail': 'Informe mes e ano.'}, status=http_status.HTTP_400_BAD_REQUEST)
+
+        clientes_qs = Cliente.objects.filter(ativo=True)
+        if cliente_ids:
+            clientes_qs = clientes_qs.filter(id__in=cliente_ids)
+
+        gerados = []
+        for cliente in clientes_qs:
+            recibo, criado = Recibo.objects.get_or_create(
+                cliente=cliente,
+                competencia_mes=mes,
+                competencia_ano=ano,
+                defaults={
+                    'valor': cliente.valor_mensal,
+                    'referente': cliente.referente_padrao,
+                    'status': 'gerado',
+                },
+            )
+
+            if criado:
+                gerados.append(recibo.id)
+            elif (recibo.status or '').lower() != 'gerado':
+                recibo.status = 'gerado'
+                recibo.save(update_fields=['status'])
+                gerados.append(recibo.id)
+
+        return Response({'gerados': len(gerados)})
