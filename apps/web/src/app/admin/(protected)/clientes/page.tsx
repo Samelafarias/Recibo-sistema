@@ -21,7 +21,7 @@ export default function ClientesPage() {
           <div className="flex items-center justify-between mb-6">
             <div>
               <h1 className="text-3xl text-primary font-extrabold mb-1">Clientes</h1>
-              <p className="text-md text-text font-medium mb-6">Gerencie seus clientes cadastrados</p>
+              <p className="text-md text-gray-500 font-medium mb-6">Gerencie seus clientes cadastrados</p>
             </div>
             <Button
               onClick={() => c.setIsAddOpen(true)}

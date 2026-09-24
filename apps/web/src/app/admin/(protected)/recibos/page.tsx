@@ -20,7 +20,7 @@ export default function AdminRecibosPage() {
       <main className="flex-1 p-6 bg-gray-50 flex flex-col justify-between">
         <div>
           <h1 className="text-3xl text-primary font-extrabold mb-1">Recibos</h1>
-          <p className="text-md text-text font-medium mb-6">
+          <p className="text-md text-gray-500 font-medium mb-6">
             Gerencie seus recibos de forma prática
           </p>
 

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -40,7 +40,13 @@ export function EditarReciboModal({
   recibo,
   isLoading = false,
 }: EditarReciboModalProps) {
-  const [formData, setFormData] = useState<ReciboData>(() => recibo ?? FORM_VAZIO);
+  const [formData, setFormData] = useState<ReciboData>(FORM_VAZIO);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setFormData(recibo ?? FORM_VAZIO);
+  }, [isOpen, recibo]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>

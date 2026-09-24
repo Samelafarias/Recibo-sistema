@@ -60,7 +60,7 @@ export function AddNovoClienteModal({ isOpen, onClose, onSave, isLoading = false
       open={isOpen}
       onOpenChange={handleOpenChange}
     >
-      <DialogContent className="sm:max-w-[480px] bg-white border-none rounded-2xl p-6 shadow-xl text-gray-800">
+      <DialogContent className="sm:max-w-120 bg-white border-none rounded-2xl p-6 shadow-xl text-gray-800">
         <DialogHeader className="pb-2">
           <DialogTitle className="text-xl font-bold text-primary">Adicionar Novo Cliente</DialogTitle>
         </DialogHeader>

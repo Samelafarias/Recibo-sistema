@@ -78,7 +78,7 @@ export default function AdminDashboardPage() {
       <Sidebar />
       <main className="flex-1 p-6 bg-gray-50">
         <h1 className="text-3xl text-primary font-extrabold mb-2 tracking-[0.5px]">Dashboard</h1>
-        <p className="text-md text-text font-medium">
+        <p className="text-md text-gray-500 font-medium">
           Acompanhe as atividades da geração de recibos em tempo real
         </p>
 
@@ -98,7 +98,7 @@ export default function AdminDashboardPage() {
           <Card className="p-4">
             <div className="flex items-center justify-between mb-2">
               <h2 className="text-sm text-gray-400">Recibos não gerados</h2>
-              <FileX className="w-6 h-6 text-[#FF4141]" />
+              <FileX className="w-6 h-6 text-danger" />
             </div>
             <p className="text-4xl text-text font-extrabold">
               {loading ? "…" : dados?.recibos_nao_gerados ?? 0}

@@ -25,18 +25,18 @@ export function ExcluirClienteModal({
 }: ExcluirClienteModalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[480px] bg-white border-none rounded-2xl p-6 shadow-xl text-gray-800">
+      <DialogContent className="sm:max-w-120 bg-white border-none rounded-2xl p-6 shadow-xl text-gray-800">
         <DialogHeader className="pb-2 text-center">
           <DialogTitle className="text-2xl font-bold text-primary">
             Excluir Cliente
           </DialogTitle>
-          <DialogDescription className="text-lg font-medium text-primary mt-1 text-center">
+          <DialogDescription className="text-[16px] font-medium text-gray-500 mt-1 text-center">
             Tem certeza que deseja excluir{" "}
             {nomeCliente ? <strong>{nomeCliente}</strong> : "este cliente"}? Esta ação não pode ser desfeita.
           </DialogDescription>
         </DialogHeader>
 
-        <div className="flex justify-center gap-4 mt-3">
+        <div className="flex justify-center gap-4 mt-1">
           <Button
             variant="outline"
             onClick={onClose}
