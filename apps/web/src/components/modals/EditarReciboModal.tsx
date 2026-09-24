@@ -40,13 +40,13 @@ export function EditarReciboModal({
   recibo,
   isLoading = false,
 }: EditarReciboModalProps) {
- const [formData, setFormData] = useState<ReciboData>(FORM_VAZIO);
+  const [formData, setFormData] = useState<ReciboData>(FORM_VAZIO);
 
-useEffect(() => {
-  if (isOpen && recibo) {
-    setFormData(recibo);
-  }
-}, [isOpen, recibo]);
+  useEffect(() => {
+    if (!isOpen) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setFormData(recibo ?? FORM_VAZIO);
+  }, [isOpen, recibo]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>

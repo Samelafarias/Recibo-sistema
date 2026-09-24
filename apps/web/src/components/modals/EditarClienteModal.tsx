@@ -26,11 +26,11 @@ const FORM_VAZIO: ClienteFormData = { nome: "", valor: "", referente: "", diaVen
 export function EditarClienteModal({ isOpen, onClose, onSave, cliente, isLoading = false }: EditarClienteModalProps) {
   const [formData, setFormData] = useState<ClienteFormData>(FORM_VAZIO);
 
-useEffect(() => {
-  if (isOpen && cliente) {
-    setFormData(cliente);
-  }
-}, [isOpen, cliente]);
+  useEffect(() => {
+    if (!isOpen) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setFormData(cliente ?? FORM_VAZIO);
+  }, [isOpen, cliente]);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
