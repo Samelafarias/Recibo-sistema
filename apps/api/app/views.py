@@ -45,6 +45,13 @@ class EmailTokenObtainPairView(TokenObtainPairView):
     serializer_class = EmailTokenObtainPairSerializer
 
 
+class HealthCheckView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request):
+        return Response({'status': 'ok'})
+
+
 class PasswordResetRequestView(APIView):
     """
     Primeiro passo da recuperação de senha: recebe o e-mail e, se existir
