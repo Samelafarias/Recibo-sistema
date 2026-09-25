@@ -307,6 +307,17 @@
 }
 
 @media print {
+  /* Reseta a cor de fundo da página impressa para branco e remove margens extras */
+  @page {
+    margin: 0;
+    background: white;
+  }
+
+  html, body {
+    background-color: #ffffff !important;
+    background: white !important;
+  }
+
   body * {
     visibility: hidden;
   }
@@ -322,6 +333,7 @@
     top: 0;
     left: 0;
     width: 100%;
+    background-color: #ffffff !important;
   }
 
   .pagina-impressao {
@@ -331,22 +343,9 @@
   .pagina-impressao:last-child {
     page-break-after: auto;
   }
-}
 
-#area-impressao { display: none; }
-
-@media print {
-  body * { visibility: hidden; }
-  #area-impressao, #area-impressao * { visibility: visible; }
-  #area-impressao { display: block; position: absolute; top: 0; left: 0; width: 100%; }
-  .pagina-impressao { page-break-after: always; }
-  .pagina-impressao:last-child { page-break-after: auto; }
-}
-
-@media print {
   * {
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
 }
-

@@ -66,9 +66,6 @@ export function ImprimirReciboModal({
           <div className="grid grid-cols-12 gap-4">
             {/* Canhoto do Recibo */}
             <div className="col-span-4 border-r border-gray-300 pr-4 flex flex-col justify-between space-y-3">
-              <div className="text-center font-bold text-gray-800 text-sm tracking-wider">
-                REO
-              </div>
               <div className="space-y-1">
                 <p><span className="font-semibold">Recebi de:</span> {reciboAtual.nome}</p>
                 <p className="font-bold text-gray-900 text-sm">{reciboAtual.valor}</p>

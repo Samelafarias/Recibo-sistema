@@ -24,9 +24,6 @@ function ReciboParaImpressao({ item }: { item: LinhaRecibo }) {
       <div className="grid grid-cols-12 gap-4 h-full">
         {/* Canhoto */}
         <div className="col-span-4 border-r border-gray-200 pr-4 flex flex-col justify-between bg-white">
-          <div className="text-center font-bold text-gray-800 text-sm tracking-wider">
-            REO
-          </div>
           <div className="space-y-1">
             <p><span className="font-semibold">Recebi de:</span> {item.nome}</p>
             <p className="font-bold text-gray-900 text-sm">{formatarMoeda(item.valor)}</p>
@@ -76,7 +73,7 @@ export default function AreaImpressao({ itens }: { itens: LinhaRecibo[] | null }
   return (
     <div id="area-impressao">
       {agruparEmPaginas(itens).map((pagina, i) => (
-        <div key={i} className="pagina-impressao flex flex-col gap-4 p-6 bg-white">
+        <div key={i} className="pagina-impressao flex flex-col gap-4 p-6 bg-white min-h-screen">
           {pagina.map((item) => (
             <ReciboParaImpressao key={item.cliente_id} item={item} />
           ))}
