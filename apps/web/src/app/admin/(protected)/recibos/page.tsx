@@ -9,7 +9,14 @@ import FiltrosRecibos from "@/components/recibos/FiltrosRecibos";
 import TabelaRecibos from "@/components/recibos/TabelaRecibos";
 import AreaImpressao from "@/components/recibos/AreaImpressao";
 import { useRecibos } from "@/hooks/useRecibos";
-import { MESES, formatarMoeda, valorPorExtenso, isoParaBR, dataPorExtenso } from "@/lib/recibo-utils";
+import {
+  MESES,
+  formatarMoeda,
+  valorPorExtenso,
+  isoParaBR,
+  dataPorExtenso,
+  montarDataVencimentoISO,
+} from "@/lib/recibo-utils";
 
 export default function AdminRecibosPage() {
   const r = useRecibos();
@@ -80,15 +87,18 @@ export default function AdminRecibosPage() {
           isOpen={r.isImprimirOpen}
           onClose={() => r.setIsImprimirOpen(false)}
           onConfirm={r.confirmarImpressao}
+          mes={r.mes}
+          ano={r.ano}
           recibos={r.previaImpressao.map((linha) => ({
             id: linha.recibo_id ?? linha.cliente_id,
             nome: linha.nome,
-            valor: formatarMoeda(linha.valor),
+            valor: linha.valor,
             valorExtenso: `A importância de ${valorPorExtenso(Number(linha.valor))}.`,
             referente: linha.referente,
             dataEmissao: isoParaBR(linha.data_emissao),
             observacao: linha.observacao || "Não há observações",
-            cidadeData: dataPorExtenso(linha.data_emissao),
+            cidadeData: dataPorExtenso(montarDataVencimentoISO(linha.dia_vencimento, r.mes, r.ano)),
+            diaVencimento: linha.dia_vencimento,
           }))}
         />
 
@@ -113,7 +123,7 @@ export default function AdminRecibosPage() {
           onSave={r.salvarEdicao}
         />
 
-        <AreaImpressao itens={r.itensParaImprimir} />
+        <AreaImpressao itens={r.itensParaImprimir} mes={r.mes} ano={r.ano} />
       </main>
     </div>
   );

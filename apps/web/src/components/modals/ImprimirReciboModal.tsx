@@ -1,10 +1,16 @@
 "use client";
 
 import React, { useState } from "react";
-import Image from "next/image";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Printer, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  MESES,
+  formatarMoeda,
+  formatarDataVencimento,
+  montarDataVencimentoISO,
+  dataPorExtenso,
+} from "@/lib/recibo-utils";
 
 interface ReciboItem {
   id?: string | number;
@@ -15,6 +21,7 @@ interface ReciboItem {
   dataEmissao: string;
   observacao?: string;
   cidadeData?: string;
+  diaVencimento?: number | null;
 }
 
 interface ImprimirReciboModalProps {
@@ -22,6 +29,8 @@ interface ImprimirReciboModalProps {
   onClose: () => void;
   onConfirm?: () => void;
   recibos?: ReciboItem[];
+  mes?: number;
+  ano?: number;
   isLoading?: boolean;
 }
 
@@ -30,14 +39,21 @@ export function ImprimirReciboModal({
   onClose,
   onConfirm,
   recibos = [],
+  mes,
+  ano,
   isLoading = false,
 }: ImprimirReciboModalProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   if (recibos.length === 0) return null;
 
+  const mesAtual = mes ?? new Date().getMonth() + 1;
+  const anoAtual = ano ?? new Date().getFullYear();
   const reciboAtual = recibos[currentIndex];
   const proximoCliente = recibos[currentIndex + 1]?.nome;
+  const dataVencimentoISO = montarDataVencimentoISO(reciboAtual.diaVencimento ?? null, mesAtual, anoAtual);
+  const dataVencimentoBR = formatarDataVencimento(reciboAtual.diaVencimento ?? null, mesAtual, anoAtual);
+  const referenteCompleto = `${reciboAtual.referente} - ${MESES[mesAtual - 1]}/${anoAtual}`;
 
   const handlePrev = () => {
     if (currentIndex > 0) setCurrentIndex((prev) => prev - 1);
@@ -68,9 +84,9 @@ export function ImprimirReciboModal({
             <div className="col-span-4 border-r border-gray-300 pr-4 flex flex-col justify-between space-y-3">
               <div className="space-y-1">
                 <p><span className="font-semibold">Recebi de:</span> {reciboAtual.nome}</p>
-                <p className="font-bold text-gray-900 text-sm">{reciboAtual.valor}</p>
-                <p><span className="font-semibold">Ref:</span> {reciboAtual.referente}</p>
-                <p><span className="font-semibold">Data:</span> {reciboAtual.dataEmissao}</p>
+                <p className="font-bold text-gray-900 text-sm">{formatarMoeda(reciboAtual.valor)}</p>
+                <p><span className="font-semibold">Ref:</span> {referenteCompleto}</p>
+                <p><span className="font-semibold">Data:</span> {dataVencimentoBR}</p>
                 <p><span className="font-semibold">Observação:</span> {reciboAtual.observacao || "Não há observações"}</p>
               </div>
               <div className="border-t border-gray-400 pt-1 text-center font-bold text-[10px] text-gray-600 uppercase tracking-wider mt-4">
@@ -84,15 +100,15 @@ export function ImprimirReciboModal({
                 <img src="/sf-logo.png" alt="Logo do Escritório" width={320} height={40} className="w-auto h-auto" />
 
                 <div className="border border-gray-400 bg-white font-bold text-sm px-3 py-1.5 rounded-md text-gray-900 shadow-sm">
-                  {reciboAtual.valor}
+                  {formatarMoeda(reciboAtual.valor)}
                 </div>
               </div>
 
               <div className="space-y-1.5 text-gray-800 pt-1">
                 <p className="font-bold text-sm">Recibo de {reciboAtual.nome}</p>
-                <p>{reciboAtual.valorExtenso}</p>
-                <p><span className="font-bold">Referente:</span> {reciboAtual.referente}</p>
-                <p className="pt-1">{reciboAtual.cidadeData}</p>
+                <p>{reciboAtual.valorExtenso || `A importância de ${reciboAtual.valor}.`}</p>
+                <p><span className="font-bold">Referente:</span> {referenteCompleto}</p>
+                <p className="pt-1">{dataPorExtenso(dataVencimentoISO)}</p>
               </div>
 
               <div className="border-t border-gray-400 pt-1 text-center font-bold text-[10px] text-gray-600 uppercase tracking-wider mt-4">
