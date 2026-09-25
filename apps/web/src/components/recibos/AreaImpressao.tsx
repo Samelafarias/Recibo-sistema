@@ -32,6 +32,7 @@ function ReciboParaImpressao({ item }: { item: LinhaRecibo }) {
             <p className="font-bold text-gray-900 text-sm">{formatarMoeda(item.valor)}</p>
             <p><span className="font-semibold">Ref:</span> {item.referente}</p>
             <p><span className="font-semibold">Data:</span> {dataPorExtenso(item.data_emissao)}</p>
+            <p><span className="font-semibold">Observação:</span> {item.observacao || "Não há observações"}</p>
           </div>
           <div className="border-t border-gray-400 pt-1 text-center font-bold text-[10px] text-gray-600 uppercase tracking-wider">
             Assinatura
