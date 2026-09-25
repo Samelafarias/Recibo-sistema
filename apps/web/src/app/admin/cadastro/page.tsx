@@ -92,7 +92,7 @@ export default function AdminCadastroPage() {
             <CardHeader className="px-7 pt-5 sm:px-10 sm:pt-5 pb-2">
               <div className="flex flex-col items-center mb-10">
                 <img
-                  src="/Logo-completa.png"
+                  src="/logo-completa.png"
                   alt="ReciboFácil logo"
                   width={260}
                   height={92}
