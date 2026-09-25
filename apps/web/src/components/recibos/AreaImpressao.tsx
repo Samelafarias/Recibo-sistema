@@ -41,7 +41,7 @@ function ReciboParaImpressao({ item }: { item: LinhaRecibo }) {
         {/* Recibo principal */}
         <div className="col-span-8 flex flex-col justify-between">
           <div className="flex items-center justify-between gap-2">
-            <Image
+            <img
               src="/sf-logo.png"
               alt="ReciboFácil Logo"
               width={320}
