@@ -76,13 +76,14 @@ const router = useRouter();
             <Card className="w-full max-w-md bg-background border border-secondary shadow-lg">
                 <CardHeader className="px-7 pt-5 sm:px-10 sm:pt-5 pb-2">
                      <div className="flex flex-col items-center mb-10">
-                        <img
+                        <Image
                         src="/logo-completa.png"
                         alt="ReciboFácil logo"
                         width={260}
                         height={92}
                         className="w-55 sm:w-65 h-auto"
-                        ></img>
+                        priority
+                        />
                     </div>
                     <CardTitle className="text-xl font-bold text-primary aling-center flex justify-center">
                         Acessar Sistema

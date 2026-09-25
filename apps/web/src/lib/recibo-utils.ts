@@ -8,6 +8,7 @@ export type LinhaRecibo = {
   data_emissao: string | null; // formato ISO: "AAAA-MM-DD"
   status: "gerado" | "pendente";
   impresso: boolean;
+  dia_vencimento: number | null;
 };
 
 export const MESES = [
@@ -18,7 +19,7 @@ export const MESES = [
 export function gerarOpcoesDeMes() {
   const hoje = new Date();
   const opcoes = [];
-  for (let i = -2; i <= 2; i++) {
+  for (let i = 0; i <= 4; i++) {
     const d = new Date(hoje.getFullYear(), hoje.getMonth() + i, 1);
     opcoes.push({ mes: d.getMonth() + 1, ano: d.getFullYear() });
   }
@@ -40,6 +41,17 @@ export function brParaIso(br: string): string | null {
   if (!m) return null;
   const [, dia, mes, ano] = m;
   return `${ano}-${mes}-${dia}`;
+}
+
+export function montarDataVencimentoISO(diaVencimento: number | null, mes: number, ano: number): string {
+  const dia = diaVencimento && diaVencimento >= 1 && diaVencimento <= 31 ? diaVencimento : 1;
+  const ultimoDiaDoMes = new Date(ano, mes, 0).getDate();
+  const diaAjustado = Math.min(dia, ultimoDiaDoMes);
+  return `${ano}-${String(mes).padStart(2, "0")}-${String(diaAjustado).padStart(2, "0")}`;
+}
+
+export function formatarDataVencimento(diaVencimento: number | null, mes: number, ano: number): string {
+  return isoParaBR(montarDataVencimentoISO(diaVencimento, mes, ano));
 }
 
 export function parseValorBR(valorStr: string): string {

@@ -25,21 +25,6 @@ export function AddNovoClienteModal({ isOpen, onClose, onSave, isLoading = false
   const [formData, setFormData] = useState<NovoClienteData>(FORM_VAZIO);
   const enviandoRef = useRef(false);
 
-  function resetarModal() {
-    setFormData(FORM_VAZIO);
-    enviandoRef.current = false;
-    onClose();
-  }
-
-  function handleOpenChange(open: boolean) {
-    setFormData(FORM_VAZIO);
-    enviandoRef.current = false;
-
-    if (!open) {
-      onClose();
-    }
-  }
-
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -47,30 +32,34 @@ export function AddNovoClienteModal({ isOpen, onClose, onSave, isLoading = false
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-
     if (enviandoRef.current || isLoading) return;
-
     enviandoRef.current = true;
     onSave(formData);
   }
 
   return (
     <Dialog
-      key={isOpen ? "add-cliente-open" : "add-cliente-closed"}
       open={isOpen}
-      onOpenChange={handleOpenChange}
+      onOpenChange={(open) => {
+        if (!open) {
+          onClose();
+          return;
+        }
+        setFormData(FORM_VAZIO);
+        enviandoRef.current = false;
+      }}
     >
       <DialogContent className="sm:max-w-120 bg-white border-none rounded-2xl p-6 shadow-xl text-gray-800">
         <DialogHeader className="pb-2">
           <DialogTitle className="text-xl font-bold text-primary">Adicionar Novo Cliente</DialogTitle>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-4 mt-2">
+        <form onSubmit={handleSubmit} autoComplete="off" className="space-y-4 mt-2">
           <div>
             <label className="block text-xs font-bold text-gray-700 mb-1">Nome Completo</label>
             <Input
               type="text" name="nome" value={formData.nome} onChange={handleChange}
-              placeholder="Nome completo do cliente" required
+              placeholder="Nome completo do cliente" required autoComplete="off"
               className="bg-[#F8FAFC] border border-gray-200 rounded-xl h-11 text-xs text-gray-700 font-medium px-3.5"
             />
           </div>
@@ -80,7 +69,7 @@ export function AddNovoClienteModal({ isOpen, onClose, onSave, isLoading = false
               <label className="block text-xs font-bold text-gray-700 mb-1">Valor Mensal</label>
               <Input
                 type="text" name="valor" placeholder="R$ 00,00"
-                value={formData.valor} onChange={handleChange} required
+                value={formData.valor} onChange={handleChange} required autoComplete="off"
                 className="bg-[#F8FAFC] border border-gray-200 rounded-xl h-11 text-xs text-gray-700 px-3.5"
               />
             </div>
@@ -88,6 +77,7 @@ export function AddNovoClienteModal({ isOpen, onClose, onSave, isLoading = false
               <label className="block text-xs font-bold text-gray-700 mb-1">Dia do vencimento</label>
               <Input
                 type="number" name="diaVencimento" placeholder="Ex: 10" min={1} max={31}
+                autoComplete="off"
                 value={formData.diaVencimento} onChange={handleChange}
                 className="bg-[#F8FAFC] border border-gray-200 rounded-xl h-11 text-xs text-gray-800 font-medium px-3.5"
               />
@@ -98,13 +88,14 @@ export function AddNovoClienteModal({ isOpen, onClose, onSave, isLoading = false
             <label className="block text-xs font-bold text-gray-700 mb-1">Referente (padrão do recibo)</label>
             <Input
               type="text" name="referente" placeholder="Ex: Mensalidade"
+              autoComplete="off"
               value={formData.referente} onChange={handleChange} required
               className="bg-[#F8FAFC] border border-gray-200 rounded-xl h-11 text-xs text-gray-800 font-medium px-3.5"
             />
           </div>
 
           <div className="flex items-center justify-end gap-3 pt-4">
-            <Button type="button" variant="outline" onClick={resetarModal} className="bg-white border-gray-300 text-gray-700 font-semibold px-6 py-2 h-10 rounded-xl shadow-sm hover:bg-gray-100">
+            <Button type="button" variant="outline" onClick={onClose} className="bg-white border-gray-300 text-gray-700 font-semibold px-6 py-2 h-10 rounded-xl shadow-sm hover:bg-gray-100">
               Cancelar
             </Button>
             <Button type="submit" disabled={isLoading} className="bg-primary hover:bg-[#0A2534] text-white font-medium px-6 py-2 h-10 rounded-xl shadow-sm">

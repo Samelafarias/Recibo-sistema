@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/6.1/ref/settings/
 """
 
 from pathlib import Path
+from urllib.parse import urlsplit
+
 import dj_database_url
 from decouple import AutoConfig
 
@@ -30,24 +32,34 @@ SECRET_KEY = env('SECRET_KEY', default='django-insecure-troque-isto-em-producao'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG', default=True, cast=bool)
 
-FRONTEND_URL = env('FRONTEND_URL', default='http://localhost:3000/admin/redefinir-senha')
+
+def normalizar_origem(valor: str | None) -> str:
+    if not valor:
+        return ''
+    origem = valor.strip().rstrip('/')
+    if '://' not in origem:
+        return origem
+    parsed = urlsplit(origem)
+    return f"{parsed.scheme}://{parsed.netloc}"
+
+
+FRONTEND_URL = env('FRONTEND_URL', default='http://localhost:3000')
+FRONTEND_BASE_URL = normalizar_origem(env('FRONTEND_BASE_URL', default=FRONTEND_URL))
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'api', 'web', '*']
 
 CORS_ALLOWED_ORIGINS = [
-    env('FRONTEND_BASE_URL', default='http://localhost:3000'),
-    'http://localhost:3001',
-    'http://127.0.0.1:3000',
-    'http://127.0.0.1:3001',
+    origem for origem in {
+        FRONTEND_BASE_URL,
+        'http://localhost:3000',
+        'http://localhost:3001',
+        'http://127.0.0.1:3000',
+        'http://127.0.0.1:3001',
+    } if origem
 ]
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
-CSRF_TRUSTED_ORIGINS = [
-    'http://localhost:3000',
-    'http://localhost:3001',
-    'http://127.0.0.1:3000',
-    'http://127.0.0.1:3001',
-]
+CSRF_TRUSTED_ORIGINS = CORS_ALLOWED_ORIGINS
 
 # Application definition
 

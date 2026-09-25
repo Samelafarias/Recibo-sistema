@@ -221,6 +221,7 @@ class RecibosPorCompetenciaView(APIView):
                     'data_emissao': recibo.data_emissao,
                     'status': (recibo.status or '').lower(),
                     'impresso': recibo.impresso,
+                    'dia_vencimento': cliente.dia_vencimento,
                 })
             else:
                 linhas.append({
@@ -233,6 +234,7 @@ class RecibosPorCompetenciaView(APIView):
                     'data_emissao': None,
                     'status': 'pendente',
                     'impresso': False,
+                    'dia_vencimento': cliente.dia_vencimento,
                 })
 
         if status_filtro == 'gerado':
