@@ -18,7 +18,7 @@ export const MESES = [
 export function gerarOpcoesDeMes() {
   const hoje = new Date();
   const opcoes = [];
-  for (let i = -2; i <= 2; i++) {
+  for (let i = 0; i <= 4; i++) {
     const d = new Date(hoje.getFullYear(), hoje.getMonth() + i, 1);
     opcoes.push({ mes: d.getMonth() + 1, ano: d.getFullYear() });
   }
