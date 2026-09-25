@@ -87,7 +87,7 @@ export default function Sidebar() {
         <div className="flex items-center justify-center p-6 h-20">
           {!isCollapsed ? (
             <img
-              src="/Logo-completa.png"
+              src="/logo-completa.png"
               alt="ReciboFácil Logo"
               width={160}
               height={50}
