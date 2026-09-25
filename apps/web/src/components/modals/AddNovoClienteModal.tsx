@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -25,13 +25,6 @@ export function AddNovoClienteModal({ isOpen, onClose, onSave, isLoading = false
   const [formData, setFormData] = useState<NovoClienteData>(FORM_VAZIO);
   const enviandoRef = useRef(false);
 
-  useEffect(() => {
-    if (isOpen) {
-      setFormData(FORM_VAZIO);
-      enviandoRef.current = false;
-    }
-  }, [isOpen]);
-
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -45,7 +38,17 @@ export function AddNovoClienteModal({ isOpen, onClose, onSave, isLoading = false
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+    <Dialog
+      open={isOpen}
+      onOpenChange={(open) => {
+        if (!open) {
+          onClose();
+          return;
+        }
+        setFormData(FORM_VAZIO);
+        enviandoRef.current = false;
+      }}
+    >
       <DialogContent className="sm:max-w-120 bg-white border-none rounded-2xl p-6 shadow-xl text-gray-800">
         <DialogHeader className="pb-2">
           <DialogTitle className="text-xl font-bold text-primary">Adicionar Novo Cliente</DialogTitle>

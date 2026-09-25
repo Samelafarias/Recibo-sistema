@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { LinhaRecibo, formatarMoeda, valorPorExtenso, dataPorExtenso, montarDataVencimentoISO, formatarDataVencimento, MESES } from "@/lib/recibo-utils";
 
 const RECIBOS_POR_PAGINA = 4;
@@ -38,7 +39,7 @@ function ReciboParaImpressao({ item, mes, ano }: { item: LinhaRecibo; mes: numbe
         {/* Recibo principal */}
         <div className="col-span-8 flex flex-col justify-between">
           <div className="flex items-center justify-between gap-2">
-            <img src="/sf-logo.png" alt="ReciboFácil Logo" width={320} height={40} className="h-18 w-auto" />
+            <Image src="/sf-logo.png" alt="ReciboFácil Logo" width={320} height={40} className="h-18 w-auto" priority />
             <div className="border border-gray-400 bg-white font-bold text-sm px-3 py-1.5 rounded-md text-gray-900">
               {formatarMoeda(item.valor)}
             </div>

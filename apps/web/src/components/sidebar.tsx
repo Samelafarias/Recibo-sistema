@@ -86,22 +86,24 @@ export default function Sidebar() {
       <div className="flex flex-col w-full">
         <div className="flex items-center justify-center p-6 h-20">
           {!isCollapsed ? (
-            <img
+            <Image
               src="/logo-completa.png"
               alt="ReciboFácil Logo"
               width={160}
               height={50}
               className="w-auto h-auto"
+              priority
             />
           ) : (
             <div className="font-bold text-xl text-[#0D253F]">
-              <img
-              src="/logo.png"
-              alt="ReciboFácil Logo"
-              width={160}
-              height={50}
-              className="w-auto h-auto"
-            />
+              <Image
+                src="/logo.png"
+                alt="ReciboFácil Logo"
+                width={160}
+                height={50}
+                className="w-auto h-auto"
+                priority
+              />
             </div>
           )}
         </div>

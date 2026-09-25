@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Printer, ChevronLeft, ChevronRight } from "lucide-react";
@@ -97,7 +98,7 @@ export function ImprimirReciboModal({
             {/* Recibo Principal */}
             <div className="col-span-8 flex flex-col justify-between space-y-3 pl-2">
               <div className="flex items-center justify-between gap-2">
-                <img src="/sf-logo.png" alt="Logo do Escritório" width={320} height={40} className="w-auto h-auto" />
+                <Image src="/sf-logo.png" alt="Logo do Escritório" width={320} height={40} className="w-auto h-auto" priority />
 
                 <div className="border border-gray-400 bg-white font-bold text-sm px-3 py-1.5 rounded-md text-gray-900 shadow-sm">
                   {formatarMoeda(reciboAtual.valor)}
