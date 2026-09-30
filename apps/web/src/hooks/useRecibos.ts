@@ -189,6 +189,24 @@ export function useRecibos() {
   }
 }
 
+  async function marcarComoPago(reciboId: number) {
+    setError("");
+    try {
+      const hoje = new Date();
+      const dataPagamento = `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, "0")}-${String(hoje.getDate()).padStart(2, "0")}`;
+      const response = await fetch(`${apiUrl()}/api/recibos/${reciboId}/`, {
+        method: "PATCH",
+        headers: authHeaders(),
+        body: JSON.stringify({ pago: true, data_pagamento: dataPagamento }),
+      });
+
+      if (!response.ok) throw new Error("Não foi possível marcar como pago.");
+      await carregarRecibos();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Erro ao marcar pagamento.");
+    }
+  }
+
   function abrirModalImprimir(itens: LinhaRecibo[]) {
     const validos = itens.filter((i) => i.recibo_id);
     if (validos.length === 0) return;
@@ -236,6 +254,7 @@ export function useRecibos() {
     // ações
     mudarMes, mudarBusca, mudarStatus, setPagina,
     gerarRecibos, gerandoLote,
+    marcarComoPago,
     // modal editar
     isEditarOpen, setIsEditarOpen, itemParaEditar, abrirModalEditar, salvarEdicao, salvandoEdicao,
     // modal imprimir

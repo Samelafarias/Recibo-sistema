@@ -8,6 +8,8 @@ export type LinhaRecibo = {
   data_emissao: string | null; // formato ISO: "AAAA-MM-DD"
   status: "gerado" | "pendente";
   impresso: boolean;
+  pago: boolean;
+  data_pagamento: string | null;
   dia_vencimento: number | null;
 };
 

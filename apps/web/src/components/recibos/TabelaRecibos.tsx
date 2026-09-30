@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Printer, Pencil, ChevronLeft, ChevronRight } from "lucide-react";
+import { Printer, Pencil, Check, ChevronLeft, ChevronRight } from "lucide-react";
 import { LinhaRecibo, formatarMoeda } from "@/lib/recibo-utils";
 
 type Props = {
@@ -15,12 +15,13 @@ type Props = {
   onSelecionarItem: (clienteId: number, checked: boolean) => void;
   onImprimir: (linha: LinhaRecibo) => void;
   onEditar: (linha: LinhaRecibo) => void;
+  onMarcarPago: (reciboId: number) => void;
   onMudarPagina: (pagina: number) => void;
 };
 
 export default function TabelaRecibos({
   linhas, loading, selecionados, pagina, totalPaginas,
-  onSelecionarTodos, onSelecionarItem, onImprimir, onEditar, onMudarPagina,
+  onSelecionarTodos, onSelecionarItem, onImprimir, onEditar, onMarcarPago, onMudarPagina,
 }: Props) {
   return (
     <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
@@ -37,14 +38,15 @@ export default function TabelaRecibos({
             <th className="p-4 font-bold">Nome</th>
             <th className="p-4 font-bold text-center">Valor</th>
             <th className="p-4 font-bold text-center">Status</th>
+            <th className="p-4 font-bold text-center">Pagamento</th>
             <th className="p-4 font-bold text-center">Ações</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-100">
           {loading ? (
-            <tr><td colSpan={5} className="p-8 text-center text-gray-400">Carregando...</td></tr>
+            <tr><td colSpan={6} className="p-8 text-center text-gray-400">Carregando...</td></tr>
           ) : linhas.length === 0 ? (
-            <tr><td colSpan={5} className="p-8 text-center text-gray-400">Nenhum cliente encontrado.</td></tr>
+            <tr><td colSpan={6} className="p-8 text-center text-gray-400">Nenhum cliente encontrado.</td></tr>
           ) : (
             linhas.map((linha) => (
               <tr key={linha.cliente_id} className="hover:bg-gray-50/50 transition-colors">
@@ -69,6 +71,25 @@ export default function TabelaRecibos({
                   >
                     {linha.status === "gerado" ? "Gerado" : "Pendente"}
                   </span>
+                </td>
+                <td className="p-4 text-center">
+                  {linha.status !== "gerado" ? (
+                    <span className="text-gray-300">—</span>
+                  ) : linha.pago ? (
+                    <span className="inline-flex items-center gap-1 px-3 py-1 text-xs font-semibold rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300">
+                      Pago{linha.data_pagamento ? ` em ${new Date(`${linha.data_pagamento}T00:00:00`).toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" })}` : ""}
+                    </span>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => linha.recibo_id && onMarcarPago(linha.recibo_id)}
+                      disabled={!linha.recibo_id}
+                      className="inline-flex items-center gap-1 px-3 py-1 text-xs font-semibold rounded-full bg-amber-100 text-amber-800 border border-amber-300 hover:bg-amber-200 transition-colors disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      <Check className="w-3.5 h-3.5" />
+                      Marcar como pago
+                    </button>
+                  )}
                 </td>
                 <td className="p-4 text-center">
                   <div className="flex justify-center items-center gap-3">

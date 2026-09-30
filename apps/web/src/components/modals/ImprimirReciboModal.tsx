@@ -23,6 +23,8 @@ interface ReciboItem {
   observacao?: string;
   cidadeData?: string;
   diaVencimento?: number | null;
+  pago: boolean;
+  data_pagamento: string | null;
 }
 
 interface ImprimirReciboModalProps {
@@ -79,7 +81,16 @@ export function ImprimirReciboModal({
         </DialogHeader>
 
         {/* Card de Visualização do Recibo (Estilo Talão) */}
-        <div className="bg-white border border-gray-200 rounded-xl p-4 my-2 text-xs text-gray-700 font-sans shadow-inner">
+        <div className="relative overflow-hidden bg-white border border-gray-200 rounded-xl p-4 my-2 text-xs text-gray-700 font-sans shadow-inner">
+          {reciboAtual.pago && (
+            <div style={{
+              position: "absolute", top: "10px", right: "-32px",
+              background: "#065f46", color: "white", fontSize: "11px", fontWeight: 500,
+              padding: "3px 40px", transform: "rotate(35deg)", letterSpacing: "1px",
+            }}>
+              PAGO
+            </div>
+          )}
           <div className="grid grid-cols-12 gap-4">
             {/* Canhoto do Recibo */}
             <div className="col-span-4 border-r border-gray-300 pr-4 flex flex-col justify-between space-y-3">
@@ -89,6 +100,11 @@ export function ImprimirReciboModal({
                 <p><span className="font-semibold">Ref:</span> {referenteCompleto}</p>
                 <p><span className="font-semibold">Data:</span> {dataVencimentoBR}</p>
                 <p><span className="font-semibold">Observação:</span> {reciboAtual.observacao || "Não há observações"}</p>
+                {reciboAtual.pago && (
+                  <p className="text-emerald-700 font-semibold">
+                    ✓ Pago{reciboAtual.data_pagamento ? ` em ${new Date(`${reciboAtual.data_pagamento}T00:00:00`).toLocaleDateString("pt-BR")}` : ""}
+                  </p>
+                )}
               </div>
               <div className="border-t border-gray-400 pt-1 text-center font-bold text-[10px] text-gray-600 uppercase tracking-wider mt-4">
                 Assinatura
@@ -110,6 +126,11 @@ export function ImprimirReciboModal({
                 <p>{reciboAtual.valorExtenso || `A importância de ${reciboAtual.valor}.`}</p>
                 <p><span className="font-bold">Referente:</span> {referenteCompleto}</p>
                 <p className="pt-1">{dataPorExtenso(dataVencimentoISO)}</p>
+                {reciboAtual.pago && (
+                  <p className="text-emerald-700 font-semibold mb-5">
+                    ✓ Pagamento confirmado{reciboAtual.data_pagamento ? ` em ${new Date(`${reciboAtual.data_pagamento}T00:00:00`).toLocaleDateString("pt-BR")}` : ""}
+                  </p>
+                )}
               </div>
 
               <div className="border-t border-gray-400 pt-1 text-center font-bold text-[10px] text-gray-600 uppercase tracking-wider mt-4">

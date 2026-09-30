@@ -33,6 +33,8 @@ class Recibo(models.Model):
     data_emissao = models.DateField(auto_now_add=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pendente')
     impresso = models.BooleanField(default=False)
+    pago = models.BooleanField(default=False)
+    data_pagamento = models.DateField(null=True, blank=True)
     criado_em = models.DateTimeField(auto_now_add=True)
 
     class Meta:

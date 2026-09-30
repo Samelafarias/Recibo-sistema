@@ -221,6 +221,8 @@ class RecibosPorCompetenciaView(APIView):
                     'data_emissao': recibo.data_emissao,
                     'status': (recibo.status or '').lower(),
                     'impresso': recibo.impresso,
+                    'pago': recibo.pago,
+                    'data_pagamento': recibo.data_pagamento,
                     'dia_vencimento': cliente.dia_vencimento,
                 })
             else:
@@ -234,6 +236,8 @@ class RecibosPorCompetenciaView(APIView):
                     'data_emissao': None,
                     'status': 'pendente',
                     'impresso': False,
+                    'pago': False,
+                    'data_pagamento': None,
                     'dia_vencimento': cliente.dia_vencimento,
                 })
 

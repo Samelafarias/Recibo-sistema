@@ -20,7 +20,16 @@ function ReciboParaImpressao({ item, mes, ano }: { item: LinhaRecibo; mes: numbe
   const referenteCompleto = `${item.referente} - ${MESES[mes - 1]}/${ano}`;
 
   return (
-    <div className="border rounded-xl p-4 text-xs text-gray-700 bg-white" style={{ height: "6.5cm" }}>
+    <div className="border rounded-xl p-4 text-xs text-gray-700 bg-white" style={{ height: "6.5cm", position: "relative", overflow: "hidden" }}>
+      {item.pago && (
+        <div style={{
+          position: "absolute", top: "10px", right: "-32px",
+          background: "#065f46", color: "white", fontSize: "11px", fontWeight: 500,
+          padding: "3px 40px", transform: "rotate(35deg)", letterSpacing: "1px",
+        }}>
+          PAGO
+        </div>
+      )}
       <div className="grid grid-cols-12 gap-4 h-full">
         {/* Canhoto */}
         <div className="col-span-4 border-r border-gray-200 pr-4 flex flex-col justify-between bg-white">
@@ -30,6 +39,11 @@ function ReciboParaImpressao({ item, mes, ano }: { item: LinhaRecibo; mes: numbe
             <p><span className="font-semibold">Ref:</span> {referenteCompleto}</p>
             <p><span className="font-semibold">Data:</span> {dataVencimentoBR}</p>
             <p><span className="font-semibold">Observação:</span> {item.observacao || "Não há observações"}</p>
+            {item.pago && (
+              <p className="text-emerald-700 font-semibold">
+                ✓ Pago{item.data_pagamento ? ` em ${new Date(`${item.data_pagamento}T00:00:00`).toLocaleDateString("pt-BR")}` : ""}
+              </p>
+            )}
           </div>
           <div className="border-t border-gray-400 pt-1 text-center font-bold text-[10px] text-gray-600 uppercase tracking-wider">
             Assinatura
@@ -45,11 +59,16 @@ function ReciboParaImpressao({ item, mes, ano }: { item: LinhaRecibo; mes: numbe
             </div>
           </div>
 
-          <div className="space-y-1.5 text-gray-800">
+          <div className="text-gray-800">
             <p className="font-bold text-sm">Recibo de {item.nome}</p>
             <p>A importância de {valorPorExtenso(valorNum)}.</p>
             <p><span className="font-bold">Referente:</span> {referenteCompleto}</p>
             <p className="pt-1">{dataPorExtenso(dataVencimentoISO)}</p>
+            {item.pago && (
+              <p className="text-emerald-700 font-semibold mb-5">
+                ✓ Pagagamento confirmado em {item.data_pagamento ? ` em ${new Date(`${item.data_pagamento}T00:00:00`).toLocaleDateString("pt-BR")}` : ""}
+              </p>
+            )}
           </div>
 
           <div className="border-t border-gray-400 pt-1 text-center font-bold text-[10px] text-gray-600 uppercase tracking-wider">
