@@ -55,6 +55,7 @@ export default function AdminRecibosPage() {
             onSelecionarItem={r.selecionarItem}
             onImprimir={(linha) => r.abrirModalImprimir([linha])}
             onEditar={r.abrirModalEditar}
+            onMarcarPago={r.marcarComoPago}
             onMudarPagina={r.setPagina}
           />
         </div>
@@ -99,6 +100,8 @@ export default function AdminRecibosPage() {
             observacao: linha.observacao || "Não há observações",
             cidadeData: dataPorExtenso(montarDataVencimentoISO(linha.dia_vencimento, r.mes, r.ano)),
             diaVencimento: linha.dia_vencimento,
+            pago: linha.pago,
+            data_pagamento: linha.data_pagamento,
           }))}
         />
 

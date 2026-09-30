@@ -122,3 +122,39 @@ class ClienteAPITestCase(APITestCase):
         self.assertGreaterEqual(response.data['clientes_cadastrados'], clientes_ativos)
         self.assertEqual(response.data['recibos_nao_gerados'], esperada_recibos_nao_gerados)
         self.assertEqual(response.data['receita_mes'], str(receita_esperada))
+
+    def test_marcar_recibo_como_pago_e_listar_pagamento(self):
+        self.autenticar()
+        cliente = Cliente.objects.create(
+            nome='Cliente Pago',
+            valor_mensal='250.00',
+            referente_padrao='Mensalidade',
+        )
+        cliente_pendente = Cliente.objects.create(
+            nome='Cliente Pendente',
+            valor_mensal='180.00',
+            referente_padrao='Mensalidade',
+        )
+        recibo = Recibo.objects.create(
+            cliente=cliente,
+            competencia_mes=9,
+            competencia_ano=2026,
+            valor='250.00',
+            referente='Mensalidade',
+            status='gerado',
+        )
+
+        atualizacao = self.client.patch(
+            f'/api/recibos/{recibo.id}/',
+            {'pago': True, 'data_pagamento': '2026-09-30'},
+            format='json',
+        )
+        self.assertEqual(atualizacao.status_code, status.HTTP_200_OK)
+
+        response = self.client.get('/api/recibos/por-competencia/?mes=9&ano=2026')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        linhas_por_cliente = {linha['cliente_id']: linha for linha in response.data['results']}
+        self.assertTrue(linhas_por_cliente[cliente.id]['pago'])
+        self.assertEqual(linhas_por_cliente[cliente.id]['data_pagamento'].isoformat(), '2026-09-30')
+        self.assertFalse(linhas_por_cliente[cliente_pendente.id]['pago'])
+        self.assertIsNone(linhas_por_cliente[cliente_pendente.id]['data_pagamento'])
