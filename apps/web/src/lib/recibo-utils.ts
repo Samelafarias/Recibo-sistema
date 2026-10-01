@@ -40,7 +40,7 @@ export function gerarOpcoesDeMes(
   const hoje = new Date();
 
   // Data inicial fixa: Setembro de 2026
-  let dataAtual = new Date(anoInicio, mesInicio - 1, 1);
+  const dataAtual = new Date(anoInicio, mesInicio - 1, 1);
 
   // Data limite: Mês atual + mesesFrente
   const dataLimite = new Date(hoje.getFullYear(), hoje.getMonth() + mesesFrente, 1);
