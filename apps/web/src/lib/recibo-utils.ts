@@ -18,13 +18,44 @@ export const MESES = [
   "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro",
 ];
 
-export function gerarOpcoesDeMes() {
+// lib/recibo-utils.ts
+
+export type OpcaoMes = {
+  mes: number;
+  ano: number;
+};
+
+/**
+ * Gera as opções de meses desde o início do sistema até X meses no futuro.
+ * @param anoInicio Ano em que o sistema começou (padrão: 2026)
+ * @param mesInicio Mês em que o sistema começou (1 = Jan, 9 = Set; padrão: 9)
+ * @param mesesFrente Quantos meses no futuro exibir a partir de hoje (padrão: 12)
+ */
+export function gerarOpcoesDeMes(
+  anoInicio = 2026,
+  mesInicio = 9,
+  mesesFrente = 12
+): OpcaoMes[] {
+  const opcoes: OpcaoMes[] = [];
   const hoje = new Date();
-  const opcoes = [];
-  for (let i = 0; i <= 4; i++) {
-    const d = new Date(hoje.getFullYear(), hoje.getMonth() + i, 1);
-    opcoes.push({ mes: d.getMonth() + 1, ano: d.getFullYear() });
+
+  // Data inicial fixa: Setembro de 2026
+  const dataAtual = new Date(anoInicio, mesInicio - 1, 1);
+
+  // Data limite: Mês atual + mesesFrente
+  const dataLimite = new Date(hoje.getFullYear(), hoje.getMonth() + mesesFrente, 1);
+
+  // Gera mês a mês desde a criação do sistema até a data limite futura
+  while (dataAtual <= dataLimite) {
+    opcoes.push({
+      mes: dataAtual.getMonth() + 1,
+      ano: dataAtual.getFullYear(),
+    });
+
+    // Avança 1 mês
+    dataAtual.setMonth(dataAtual.getMonth() + 1);
   }
+
   return opcoes;
 }
 
