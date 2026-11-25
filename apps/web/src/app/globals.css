@@ -306,13 +306,13 @@
   display: none;
 }
 
-@media print {
-  /* Reseta a cor de fundo da página impressa para branco e remove margens extras */
-  @page {
-    margin: 0;
-    background: white;
-  }
+@page {
+  size: A4;
+  margin: 8mm;
+}
 
+@media print {
+  /* Mantém o fundo branco na impressão. */
   html, body {
     background-color: #ffffff !important;
     background: white !important;
